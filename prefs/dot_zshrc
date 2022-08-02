@@ -1,0 +1,69 @@
+# Path to HomeBrew Silicon bin :
+export PATH=/opt/homebrew/bin:$PATH
+
+## oh-my-zsh Settings :
+# --------------------------------
+# Path to your oh-my-zsh installation.
+export ZSH="/Users/martial/.oh-my-zsh"
+# Set name of the theme to load --- if set to "random", it will
+# load a random theme each time oh-my-zsh is loaded, in which case,
+# to know which specific one was loaded, run: echo $RANDOM_THEME
+# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+#ZSH_THEME="robbyrussell"
+source ~/.p10k.zsh
+ZSH_THEME="powerlevel10k/powerlevel10k"
+
+plugins=(gitfast git last-working-dir common-aliases zsh-syntax-highlighting history-substring-search macos ssh-agent kubectl)
+source $ZSH/oh-my-zsh.sh
+
+# Other Plugins
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+# unalias rm
+
+# OpenSSL 3 // Installed by Homebrew
+#export PATH="/opt/homebrew/opt/openssl@3/bin:$PATH"
+
+#export LDFLAGS="-L/opt/homebrew/opt/openssl@3/lib"
+#export CPPFLAGS="-I/opt/homebrew/opt/openssl@3/include"
+
+PATH="/opt/homebrew/opt/make/libexec/gnubin:$PATH"
+
+# Ruby - rbenv settings :
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
+
+# node Homebrew :
+export PATH="/opt/homebrew/opt/node@16/bin:$PATH"
+
+export LDFLAGS="-L/opt/homebrew/opt/node@16/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/node@16/include"
+
+# Rails and Ruby uses the local `bin` folder to store binstubs.
+# So instead of running `bin/rails` like the doc says, just run `rails`
+# Same for `./node_modules/.bin` and nodejs
+export PATH="./bin:./node_modules/.bin:${PATH}:/usr/local/sbin"
+
+export BUNDLER_EDITOR=code
+
+# Compiling Ruby fix ?
+export LDFLAGS="-L/opt/homebrew/opt/libffi/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/libffi/include"
+export PKG_CONFIG_PATH="/opt/homebrew/opt/libffi/lib/pkgconfig"
+
+# Test CockroachDB:
+# export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+# export LDFLAGS="-L/opt/homebrew/opt/libpq/lib"
+# export CPPFLAGS="-I/opt/homebrew/opt/libpq/include"
+# export PKG_CONFIG_PATH="/opt/homebrew/opt/libpq/lib/pkgconfig"
+
+if type brew &>/dev/null; then
+  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+
+  autoload -Uz compinit
+  compinit
+fi
+
+# Rails App:update merge tool:
+export THOR_MERGE="code -d $1 $2"
+
+[[ -f "$HOME/.zsh/.aliases" ]] && source "$HOME/.zsh/.aliases"
