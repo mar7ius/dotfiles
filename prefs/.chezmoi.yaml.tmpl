@@ -1,0 +1,17 @@
+{{- $name := "Martial Salgues" -}}
+{{- $githubEmail := "github@mar7ius.me" -}}
+{{- $githubUsername := "mar7ius" -}}
+
+data:
+  name: {{ $name | quote }}
+  personal:
+    accounts:
+      github:
+        username: {{ $githubUsername | quote }}
+        email: {{ $githubEmail | quote }}
+
+
+edit:
+  command: code
+  args:
+    - "--wait"
