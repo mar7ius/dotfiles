@@ -1,0 +1,8 @@
+Host github.com
+	IdentityFile ~/.ssh/keys/github_ed25519
+
+Host ananas
+  HostName {{ (bitwardenFields "item" .personal.bw_vault.items.ssh_key_item_id).ananas_hostname.value }}
+  User {{ (bitwardenFields "item" .personal.bw_vault.items.ssh_key_item_id).ananas_user.value }}
+  Port {{ (bitwardenFields "item" .personal.bw_vault.items.ssh_key_item_id).ananas_port.value }}
+  IdentityFile ~/.ssh/keys/ananas_rsa
