@@ -2,6 +2,9 @@
 {{- $githubEmail := "github@mar7ius.me" -}}
 {{- $githubUsername := "mar7ius" -}}
 {{- $bwSshItemId := "c93fe86d-44b5-43fc-a717-aee50116c929" -}}
+{{- $ageKeyFileId := "6a992c93-4f19-465c-8c26-aee700dad835" -}}
+{{- $ageKeyFilePath := "~/.age_key" -}}
+{{- $ageRecipient := "age1vwddw7mk7nkfxegrzyac6lm388hjts2259rtcgm8nhvh00vg7c9q8wcmj6" -}}
 
 data:
   name: {{ $name | quote }}
@@ -9,6 +12,7 @@ data:
     bw_vault:
       items:
         ssh_key_item_id: {{ $bwSshItemId | quote }}
+        age_key_file_id: {{ $ageKeyFileId | quote }}
     accounts:
       github:
         username: {{ $githubUsername | quote }}
@@ -19,3 +23,8 @@ edit:
   command: code
   args:
     - "--wait"
+
+encryption: age
+age:
+  identity: {{ $ageKeyFilePath | quote }}
+  recipient: {{ $ageRecipient | quote }}
