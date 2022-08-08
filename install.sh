@@ -9,7 +9,14 @@ LOG_BOX_INITIALIZED="false"
 spin_chars="🕑🕝🕓🕟🕕🕡🕗🕣🕙🕥🕛🕧"
 spin_count=0
 
-clean_up() {
+chomp() {
+  printf "%s" "${1/"$'\n'"/}"
+}
+
+cleanup() {
+  LOG_BOX_INITIALIZED="false"
+  ROW_LOG=""
+  COL_LOG=""
   tput cnorm
   tput sgr0
 }
@@ -20,6 +27,7 @@ get_row() {
   IFS=';' read -sdR -p $'\E[6n' ROW COL
   echo "${ROW#*[}"
 }
+
 get_col() {
   local COL
   local ROW
@@ -52,19 +60,13 @@ spin() {
     LOG_BOX_INITIALIZED="true"
   fi
 }
+
 endspin() {
   tput rc
   tput el
-  tput cd # tput ed (clear below the cursor position) doesn't work on macOS, so use tput cd instead
+  tput cd              # tput ed (clear below the cursor position) doesn't work on macOS, so use tput cd instead
   printf "\r%s\n" "$@" # Clear the `installing...` line and print the status
-  reset_spinner
-}
-
-reset_spinner() {
-  LOG_BOX_INITIALIZED="false"
-  ROW_LOG=""
-  COL_LOG=""
-  PROC_ID=""
+  cleanup
 }
 
 loader() {
@@ -75,17 +77,17 @@ loader() {
 $(eval ruby -e \'puts \"$OPERATION\".capitalize\') $1...
 
 EOF
-  echo "proc_id varible: ${PROC_ID}   ---- last process id: ${$!}" >>$LOG_FILE
-  # The `while kill -0 $PROC_ID` will check if the process is still running.
-  # Then, with the `wait` command, we retrieve the exit status of the previous backgrounded command
+
+  # `$!` refers to the last backgrounded process and `while kill -0 $!` will check if the process is still running.
+  # Then, with the `wait` command, we retrieve the exit status of the process
   # That exit status will be stored in the `$?` variable, and we can use it to check if the command was successful or not.
   tput civis # Hide cursor
-  while kill -0 $PROC_ID >/dev/null 2>&1; do
+  while kill -0 $! >/dev/null 2>&1; do
     spin
   done
   tput cnorm # Show cursor
 
-  wait $PROC_ID
+  wait $!
 
   if [ ${?} -ne 0 ]; then
     endspin "$(tput bold) Error while $OPERATION $1 $(tput sgr0)❌"
@@ -96,41 +98,54 @@ EOF
   fi
 }
 
+check_for() {
+  printf "🔎 Checking for $1..."
+  if ! [[ $2 ]]; then
+    ${3} $1
+  else
+    printf "\r $(tput sitm)--> $1 is installed! ✅$(tput sgr0)\n"
+  fi
+}
+
+install_brew() {
+  NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" >>$LOG_FILE 2>&1 &
+  loader $1
+  export PATH=/opt/homebrew/bin:$PATH
+  echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >>/Users/$USER/.zprofile
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+}
+
+install_chezmoi() {
+  brew install chezmoi >>$LOG_FILE 2>&1 &
+  loader $1
+}
+
+install_xcode_cli_tools() {
+  clt_placeholder="/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
+  /usr/bin/sudo /usr/bin/touch "${clt_placeholder}"
+
+  clt_label_command="/usr/sbin/softwareupdate -l |
+                    grep -B 1 -E 'Command Line Tools' |
+                    awk -F'*' '/^ *\\*/ {print \$2}' |
+                    sed -e 's/^ *Label: //' -e 's/^ *//' |
+                    sort -V |
+                    tail -n1"
+  clt_label="$(chomp "$(/bin/bash -c "${clt_label_command}")")"
+
+  if [[ -n "${clt_label}" ]]; then
+    /usr/bin/sudo "/usr/sbin/softwareupdate" "-i" "${clt_label}" >>$LOG_FILE 2>&1 &
+    loader $1
+    /usr/bin/sudo "/usr/bin/xcode-select" "--switch" "/Library/Developer/CommandLineTools" >>$LOG_FILE 2>&1
+  fi
+  /usr/bin/sudo "/bin/rm" "-f" "${clt_placeholder}" >>$LOG_FILE 2>&1
+}
+
 check_for_dependencies() {
-  echo "$(tput bold)⚙️  Looking for dependencies...$(tput sgr0)"
+  printf "\n$(tput bold)⚙️  Looking for dependencies...$(tput sgr0)\n\n"
 
-  # Checking for Xcode command line tools
-  printf "🔎 Checking for Xcode command line tools..."
-  if [ ! "$(xcode-select -p)" ]; then
-    xcode-select --install >>$LOG_FILE 2>&1 &
-    PROC_ID=$!
-    loader "XCode Command Line Tools"
-  else
-    printf "\r $(tput sitm)--> Command Line Developer Tools is installed! ✅$(tput sgr0)\n"
-  fi
-
-  # Checking for Homebrew:
-  printf "🔎 Checking for Homebrew..."
-  if [ ! "$(command -v brew)" ]; then
-    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" >>$LOG_FILE 2>&1 &
-    PROC_ID=$!
-    loader "Homebrew"
-    export PATH=/opt/homebrew/bin:$PATH
-    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >>/Users/$USER/.zprofile
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-  else
-    printf "\r $(tput sitm)--> Homebrew is installed ✅$(tput sgr0)\n"
-  fi
-
-  # Checking for chezmoi:
-  printf "🔎 Checking for chezmoi..."
-  if [ ! "$(command -v chezmoi)" ]; then
-    brew install chezmoi >>$LOG_FILE 2>&1 &
-    PROC_ID=$!
-    loader "Chezmoi"
-  else
-    printf "\r $(tput sitm)--> Chezmoi is installed ✅$(tput sgr0)\n"
-  fi
+  check_for "XCode Command Line Tools" "-e '/Library/Developer/CommandLineTools/usr/bin/git'" install_xcode_cli_tools
+  check_for "Homebrew" "$(command -v brew)" install_brew
+  check_for "Chezmoi" "$(command -v chezmoi)" install_chezmoi
 }
 
 run_chezmoi() {
@@ -140,18 +155,18 @@ run_chezmoi() {
   if [ ! -d "$HOME/.local/share/chezmoi" ]; then
     echo " 🏗 No local chezmoi found, cloning from ${CHEZMOI_REPO}..."
     chezmoi init "$CHEZMOI_REPO" >>$LOG_FILE 2>&1 &
-    PROC_ID=$! # `$!` store the Process ID of the previous background process
     OPERATION="cloning" loader "Chezmoi"
 
     # chezmoi init --apply "$CHEZMOI_REPO"
   else
     echo "$(tput sitm) Local chezmoi found, using it...$(tput sgr0)"
-    chezmoi init && chezmoi apply -v -n
+    chezmoi init && chezmoi apply -v -n >>$LOG_FILE 2>&1
   fi
 }
 
 init() {
   clear
+
   cat <<EOF
   This script will check or install the following dependencies:
   $(tput bold)
@@ -165,8 +180,6 @@ init() {
 EOF
 
   read -rp "$(tput bold)Press any key to continue... 🚀$(tput sgr0) (Press Ctrl+C to abort)"
-
-  echo " "
   eval "$(sudo -v -p "$(printf 'Sudo is required to install some dependencies.\nPlease enter your password: ')")"
   echo "" >$LOG_FILE
 }
@@ -181,8 +194,9 @@ run() {
     tput bold
     tput setaf 118
   )🎉  Done! $(tput sgr0)"
-  exec zsh
 }
 
-trap 'clean_up' EXIT
+trap 'cleanup' EXIT
+trap 'sudo kill -9 $! >>$LOG_FILE 2>&1' EXIT
+
 run
