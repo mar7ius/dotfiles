@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -ue
+
+source "{{ .chezmoi.sourceDir }}/.chezmoiscripts/.commons.sh"
+
+echo "⚙️  Installing packages..."
+
+brew update --force --quiet >>$LOG_FILE 2>&1
+
+brew bundle --no-lock --file=/dev/stdin <<EOF
+# Taps
+{{ range (.homebrew.taps | uniq) -}}
+tap '{{ . }}'
+{{ end -}}
+# Formulaes
+{{ range (.homebrew.formulaes | uniq) -}}
+brew '{{ . }}'
+{{ end -}}
+# Casks
+{{ range (.homebrew.casks | uniq) -}}
+cask '{{ . }}'
+{{ end -}}
+EOF
