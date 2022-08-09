@@ -1,0 +1,86 @@
+homebrew:
+  taps:
+    - homebrew/bundle
+    - homebrew/cask
+    - homebrew/cask-fonts
+    - homebrew/cask-versions
+    - homebrew/core
+  formulaes:
+    # Utils
+    - age # Simple, modern, secure file encryption
+    - ansible # Automate deployment, configuration, and upgrading
+    - ansible-lint # Checks ansible playbooks for practices and behaviour
+    - bitwarden-cli # Secure and free password manager for all of your devices
+    - chezmoi # Manage your dotfiles across multiple diverse machines, securely
+    - ffmpeg # Play, record, convert, and stream audio and video
+    - mas # Mac App Store manager
+    - yt-dlp # A youtube-dl fork with additional features and fixes
+
+    # CLI tools/Enhancements
+    - bat # Better cat in Terminal
+    - cmake # Cross-platform make
+    - coreutils # GNU core utilities
+    # - cjson # Ultralightweight JSON parser in ANSI C
+    - exa # Modern replacement for 'ls'
+    - grep # Global Regural Expression Print
+    - gh # GitHub command-line tool
+    - git # Distributed revision control system
+    - jq # Lightweight and flexible command-line JSON processor
+    - wget # Internet file retriever
+
+    # Dev tools
+    - anycable-go # WebSocket server with action cable protocol
+    - geos # Geometry Engine
+    - libyaml # YAML Parser
+    - openssl@1.1 # Cryptography and SSL/TLS Toolkit
+    - postgresql # Object-relational database system
+    - redis # Persistent key-value database, with built-in net interface
+    # - sqlite # Command-line interface for SQLite
+
+    # Languages
+    - go # Open source programming language to build simple/reliable/efficient software
+    - node # Platform built on V8 to build network applications
+    - node@16 # Platform built on V8 to build network applications
+    - python@3 # Interpreted, interactive, object-oriented programming language
+    - rbenv # Ruby version manager
+    - ruby-build # Install various Ruby versions and implementations
+    - webpack # Bundler for JavaScript and friends
+    - yarn # JavaScript package manager
+
+    # Kubernetes
+    - helm # Kubernetes package manager
+    - k3d # Little helper to run CNCF's k3s in Docker
+    - kubernetes-cli # Kubernetes command-line interface
+
+  casks:
+    # Fonts
+    - font-jetbrains-mono
+
+    # Apps
+    - bitwarden
+    - brave-browser
+    - betterdisplay
+    - docker
+    - google-chrome
+    - iina
+    - iterm2
+    - lens # Kubernetes IDE
+    - medis
+    - oracle-jdk
+    - slack
+    - teamviewer
+    - vscodium # OS version of VSCode without all microsoft bullshit
+    - zoom
+
+    # Quicklook plugins
+    - qlmarkdown
+    - syntax-highlight
+
+  # Not using these yet, mas is inconsistent with new macos versions
+  # mas:
+  #   - name: "Super Agent for Safari"
+  #     id: 1568262835
+  #   - name: "Parcel"
+  #     id: 639968404
+  #   - name: "Xcode"
+  #     id: 497799835
