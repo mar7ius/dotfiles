@@ -8,6 +8,10 @@ if ! command -v brew &>/dev/null; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
+# if [ -n "$BW_SESSION"]
+#   alias bw='bw $@ --session $BW_SESSION'
+# fi
+
 # create a function to prompt for a string
 prompt_for() {
   local answer=""
