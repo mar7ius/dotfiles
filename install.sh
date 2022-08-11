@@ -9,10 +9,6 @@ LOG_BOX_INITIALIZED="false"
 spin_chars="🕑🕝🕓🕟🕕🕡🕗🕣🕙🕥🕛🕧"
 spin_count=0
 
-chomp() {
-  printf "%s" "${1/"$'\n'"/}"
-}
-
 cleanup() {
   LOG_BOX_INITIALIZED="false"
   ROW_LOG=""
@@ -21,6 +17,7 @@ cleanup() {
   tput sgr0
 }
 
+# Loader/Spinner methods :
 get_row() {
   local COL
   local ROW
@@ -98,9 +95,10 @@ EOF
   fi
 }
 
+# Dependencies check & install methods :
 check_for() {
   printf "🔎 Checking for $1..."
-  if ! [[ $2 ]]; then
+  if ! [[ $2 ]] &>/dev/null; then
     ${3} $1
   else
     printf "\r $(tput sitm)--> $1 is installed! ✅$(tput sgr0)\n"
@@ -118,6 +116,17 @@ install_brew() {
 install_chezmoi() {
   brew install chezmoi >>$LOG_FILE 2>&1 &
   loader $1
+}
+
+install_bitwarden() {
+  brew install bitwarden-cli >>$LOG_FILE 2>&1 &
+  loader $1
+}
+
+# Downloads and installs the xcode command line tools
+# Source: https://github.com/Homebrew/install/blob/master/install.sh#L850
+chomp() {
+  printf "%s" "${1/"$'\n'"/}"
 }
 
 install_xcode_cli_tools() {
@@ -146,6 +155,22 @@ check_for_dependencies() {
   check_for "XCode Command Line Tools" "-e '/Library/Developer/CommandLineTools/usr/bin/git'" install_xcode_cli_tools
   check_for "Homebrew" "$(command -v brew)" install_brew
   check_for "Chezmoi" "$(command -v chezmoi)" install_chezmoi
+  check_for "Bitwarden" "$(command -v bw)" install_bitwarden
+}
+
+unlock_bw() {
+  echo " "
+  echo "$(tput bold)🔐  Login/Unlock Bitwarden...$(tput sgr0)"
+	if bw status | grep "locked" &>/dev/null; then
+		export BW_SESSION="$(bw unlock --raw)"
+    echo "🔓  Bitwarden Vault is now unlocked."
+	elif bw status | grep "unauthenticated" &>/dev/null; then
+		export BW_SESSION="$(bw login --raw)"
+    echo "🔓  Bitwarden Vault is now unlocked."
+	elif [[ -z "${BW_SESSION}" ]]; then
+		echo "Unable to login/unlock Bitwarden. Try manualy and restart the script"
+    exit 1
+	fi
 }
 
 run_chezmoi() {
@@ -157,10 +182,10 @@ run_chezmoi() {
     chezmoi init "$CHEZMOI_REPO" >>$LOG_FILE 2>&1 &
     OPERATION="cloning" loader "Chezmoi"
 
-    # chezmoi init --apply "$CHEZMOI_REPO"
+    exec chezmoi apply -v -n
   else
     echo "$(tput sitm) Local chezmoi found, using it...$(tput sgr0)"
-    chezmoi init && chezmoi apply -v -n >>$LOG_FILE 2>&1
+    exec chezmoi apply -v -n
   fi
 }
 
@@ -187,6 +212,7 @@ EOF
 run() {
   init
   check_for_dependencies
+  unlock_bw
   run_chezmoi
   echo "$(
     tput el
