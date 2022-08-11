@@ -161,16 +161,16 @@ check_for_dependencies() {
 unlock_bw() {
   echo " "
   echo "$(tput bold)🔐  Login/Unlock Bitwarden...$(tput sgr0)"
-	if bw status | grep "locked" &>/dev/null; then
-		export BW_SESSION="$(bw unlock --raw)"
+  if bw status | grep "locked" &>/dev/null; then
+    export BW_SESSION="$(bw unlock --raw)"
     echo "🔓  Bitwarden Vault is now unlocked."
-	elif bw status | grep "unauthenticated" &>/dev/null; then
-		export BW_SESSION="$(bw login --raw)"
+  elif bw status | grep "unauthenticated" &>/dev/null; then
+    export BW_SESSION="$(bw login --raw)"
     echo "🔓  Bitwarden Vault is now unlocked."
-	elif [[ -z "${BW_SESSION}" ]]; then
-		echo "Unable to login/unlock Bitwarden. Try manualy and restart the script"
+  elif [[ -z "${BW_SESSION}" ]]; then
+    echo "Unable to login/unlock Bitwarden. Try manualy and restart the script"
     exit 1
-	fi
+  fi
 }
 
 run_chezmoi() {
