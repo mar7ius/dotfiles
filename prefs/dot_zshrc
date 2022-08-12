@@ -26,6 +26,7 @@ zstyle ':z4h:autosuggestions' forward-char 'accept'
 
 # Recursively traverse directories when TAB-completing files.
 zstyle ':z4h:fzf-complete' recurse-dirs 'no'
+zstyle ':z4h:*' fzf-flags --color=hl:2,hl+:2
 
 # Enable direnv to automatically source .envrc files.
 zstyle ':z4h:direnv'         enable 'no'
@@ -59,7 +60,7 @@ z4h init || return
 # Extend PATH.
 # path=(~/bin $path)
 export PATH=/opt/homebrew/bin:$PATH
-
+export HOMEBREW_NO_ANALYTICS=1
 # Export environment variables.
 export GPG_TTY=$TTY
 
