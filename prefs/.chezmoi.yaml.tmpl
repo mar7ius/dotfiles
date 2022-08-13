@@ -24,6 +24,12 @@ edit:
   args:
     - "--wait"
 
+merge:
+  command: code
+  args:
+    - "--wait"
+    - "--diff"
+
 encryption: age
 age:
   identity: {{ $ageKeyFilePath | quote }}
