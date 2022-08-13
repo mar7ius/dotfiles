@@ -89,9 +89,6 @@
     // "plaintext": "erb"
   },
   "tailwindCSS.emmetCompletions": true,
-  "browser-preview.startUrl": "http://localhost:3000/",
-  "browser-preview.ignoreHttpsErrors": true,
-  "browser-preview.chromeExecutable": "/Applications/Google\\ Chrome.app",
   // "[ruby]": {
   //   "editor.defaultFormatter": "jnbt.vscode-rufo"
   // }
@@ -131,5 +128,6 @@
     "style"
   ],
   "javascript.updateImportsOnFileMove.enabled": "always",
-  "thunder-client.codeSnippetLanguage": "js-fetch"
+  "thunder-client.codeSnippetLanguage": "js-fetch",
+  "diffEditor.ignoreTrimWhitespace": false
 }
