@@ -1,12 +1,20 @@
 #!/usr/bin/env bash
 
-set -ue
+set -euo pipefail
 
-source "{{ .chezmoi.sourceDir }}/.chezmoiscripts/.commons.sh"
+{{ template "source-utils" . }}
+{{ template "load-homebrew" . }}
 
-echo "⚙️  Installing packages..."
+section "Applications & Packages"
 
-brew update --force --quiet >>$LOG_FILE 2>&1
+action "Checking for updates..."
+
+action "Checking for system updates"
+sudo softwareupdate -i -a
+action "Checking for Homebrew updates"
+brew update --force --quiet && brew upgrade --quiet
+
+action "Installing packages..."
 
 brew bundle --no-lock --file=/dev/stdin <<EOF
 # Taps
@@ -22,3 +30,7 @@ brew '{{ . }}'
 cask '{{ . }}'
 {{ end -}}
 EOF
+
+action "Cleaning up..."
+brew cleanup --prune=all --quiet
+success "Packages installed!"
