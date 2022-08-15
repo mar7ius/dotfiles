@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+{{ template "source-utils" . }}
+
+section "Setting up VS Code"
+
+action "Installing extensions..."
+
+# VSCode extensions: Use '--force' argument to update to latest version
+{{ range (.vscode.extensions | uniq) -}}
+code --force --install-extension '{{ . }}'
+{{ end -}}

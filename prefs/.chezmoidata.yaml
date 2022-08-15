@@ -84,3 +84,32 @@ homebrew:
   #     id: 639968404
   #   - name: "Xcode"
   #     id: 497799835
+
+vscode:
+  extensions:
+    - aliariff.auto-add-brackets
+    - aliariff.vscode-erb-beautify
+    - bradlc.vscode-tailwindcss
+    - castwide.solargraph
+    - dbaeumer.vscode-eslint
+    - emmanuelbeziat.vscode-great-icons
+    - foxundermoon.shell-format
+    - GitHub.copilot
+    - jnbt.vscode-rufo
+    - kaiwood.endwise
+    - ".config/vscode/mar7ius-theme-1.0.0.vsix"
+    - ms-azuretools.vscode-docker
+    - ms-kubernetes-tools.vscode-kubernetes-tools
+    - ms-python.python
+    - ms-vscode.makefile-tools
+    - NativeBase.nativebase-v3-vscode-extension
+    - qwtel.sqlite-viewer
+    - rangav.vscode-thunder-client
+    - rebornix.ruby
+    - redhat.ansible
+    - redhat.vscode-yaml
+    - sibiraj-s.vscode-scss-formatter
+    - wingrunr21.vscode-ruby
+    - ybaumes.highlight-trailing-white-spaces
+    - Zignd.html-css-class-completion
+    - ZneuRay.erb-vscode-snippets
