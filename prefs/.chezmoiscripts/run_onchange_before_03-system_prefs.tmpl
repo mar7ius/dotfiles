@@ -17,10 +17,11 @@ osascript -e 'tell application "System Preferences" to quit'
 action "Computer identity"
 
 # Set computer name (as done via System Preferences → Sharing)
-sudo scutil --set ComputerName {{ .host.friendly_name }}
-sudo scutil --set HostName {{ .host.host_name }}
-sudo scutil --set LocalHostName {{ .host.host_name }}
-sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName {{ .host.host_name }}
+sudo scutil --set ComputerName {{ .host.computerName }}
+sudo scutil --set HostName {{ .host.hostname }}
+sudo scutil --set LocalHostName {{ .host.hostname }}
+sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName {{ .host.hostname }}
+sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server ServerDescription {{ .host.computerName }}
 dscacheutil -flushcache
 
 action "Languages & localization"

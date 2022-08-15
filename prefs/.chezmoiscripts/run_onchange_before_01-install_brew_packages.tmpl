@@ -7,10 +7,9 @@ set -euo pipefail
 
 section "Applications & Packages"
 
-action "Checking for updates..."
-
 action "Checking for system updates"
 sudo softwareupdate -i -a
+
 action "Checking for Homebrew updates"
 brew update --force --quiet && brew upgrade --quiet
 
@@ -33,4 +32,5 @@ EOF
 
 action "Cleaning up..."
 brew cleanup --prune=all --quiet
+
 success "Packages installed!"
