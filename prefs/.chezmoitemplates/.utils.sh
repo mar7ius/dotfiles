@@ -2,15 +2,18 @@
 
 LOG_FILE="/tmp/log-test.txt"
 
-# BREW=("/opt/homebrew/bin/brew")
+# Style:
+BOLD=$(tput bold)
+ITALIC=$(tput sitm)
+UNDERLINE=$(tput smul)
+END=$(tput sgr0)
 
-if ! command -v brew &>/dev/null; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-fi
-
-# if [ -n "$BW_SESSION"]
-#   alias bw='bw $@ --session $BW_SESSION'
-# fi
+# Colors:
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+MAGENTA=$(tput setaf 5)
 
 # create a function to prompt for a string
 prompt_for() {
@@ -33,4 +36,22 @@ prompt_for_password() {
     fi
   done
   echo "$answer"
+}
+
+function section {
+  echo ""
+  echo $BOLD $MAGENTA "*** $1 ***" $END
+  echo ""
+}
+
+function action {
+  echo $BLUE "⚙️  $1" $END
+}
+
+function log {
+  echo $ITALIC "$1" $END
+}
+
+function success {
+  echo $GREEN "✅ $1" $END
 }
