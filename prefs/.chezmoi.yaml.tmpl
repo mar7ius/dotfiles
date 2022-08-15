@@ -1,4 +1,6 @@
 {{- $name := "Martial Salgues" -}}
+{{- $computerName := "Martial's MacBook Air" -}}
+{{- $hostname := "martials-mba" -}}
 {{- $githubEmail := "github@mar7ius.me" -}}
 {{- $githubUsername := "mar7ius" -}}
 {{- $bwSshItemId := "c93fe86d-44b5-43fc-a717-aee50116c929" -}}
@@ -8,6 +10,9 @@
 
 data:
   name: {{ $name | quote }}
+  host:
+    hostname: {{ $hostname | quote }}
+    computerName: {{ $computerName | quote }}
   personal:
     bw_vault:
       items:
