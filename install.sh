@@ -205,7 +205,7 @@ init() {
 EOF
 
   read -rp "$(tput bold)Press any key to continue... 🚀$(tput sgr0) (Press Ctrl+C to abort)"
-  eval "$(sudo -v -p "$(printf 'Sudo is required to install some dependencies.\nPlease enter your password: ')")"
+  eval "$(sudo -v -p "$(printf 'Admin password is required to install some dependencies.\nPlease enter your password: ')")"
   echo "" >$LOG_FILE
 }
 
