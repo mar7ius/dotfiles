@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+{{ template "source-utils" . }}
+
+section "Setting up age encryption"
+action "Checking for age key..."
+
+if [ ! -f {{ joinPath .chezmoi.homeDir ".age_key" }} ]; then
+    log "Age key not found, retrieving..."
+    {{ include "./.chezmoitemplates/bw-age" }}
+    age --decrypt --output {{ joinPath .chezmoi.homeDir ".age_key" }} {{ joinPath .chezmoi.homeDir "key.txt.age" }}
+    chmod 600 {{ joinPath .chezmoi.homeDir ".age_key" }}
+    rm -f {{ joinPath .chezmoi.homeDir "key.txt.age" }}
+fi
+
+success "Age is ready!"

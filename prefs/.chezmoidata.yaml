@@ -54,7 +54,8 @@ homebrew:
 
   casks:
     # Fonts
-    - font-jetbrains-mono
+    - font-jetbrains-mono-nerd-font
+    - font-hack-nerd-font
 
     # Apps
     - bitwarden
@@ -66,8 +67,9 @@ homebrew:
     - iterm2
     - lens # Kubernetes IDE
     - medis
-    - oracle-jdk
+    - raycast # Spotlight alternative
     - slack
+    - stats # iStatmenu alternative
     - teamviewer
     - vscodium # OS version of VSCode without all microsoft bullshit
     - zoom
@@ -113,3 +115,9 @@ vscode:
     - ybaumes.highlight-trailing-white-spaces
     - Zignd.html-css-class-completion
     - ZneuRay.erb-vscode-snippets
+  disabled:
+    - ms-azuretools.vscode-docker
+    - ms-python.python
+    - qwtel.sqlite-viewer
+    - redhat.ansible
+    - Zignd.html-css-class-completion

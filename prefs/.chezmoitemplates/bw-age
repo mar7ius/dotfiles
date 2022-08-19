@@ -1,0 +1,1 @@
+chezmoi execute-template '{{ bitwardenAttachment "key.txt.age" .personal.bw_vault.items.age_key_file_id }}' -o key.txt.age

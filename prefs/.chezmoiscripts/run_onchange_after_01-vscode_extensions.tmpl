@@ -12,3 +12,9 @@ action "Installing extensions..."
 {{ range (.vscode.extensions | uniq) -}}
 code --force --install-extension '{{ . }}'
 {{ end -}}
+
+action "Disabling some extensions by default..."
+
+{{ range (.vscode.disabled | uniq) -}}
+code --disable-extension '{{ . }}'
+{{ end -}}
