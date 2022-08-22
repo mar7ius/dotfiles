@@ -160,7 +160,7 @@ action "Keyboard"
 # Key repeat speed
 defaults write -g KeyRepeat -int 1
 # Key repeat delay
-defaults write -g InitialKeyRepeat -int 10
+defaults write -g InitialKeyRepeat -int 14
 # Disables auto substitutions :
 defaults write -g NSAutomaticCapitalizationEnabled -bool false
 defaults write -g NSAutomaticDashSubstitutionEnabled -bool false
@@ -307,10 +307,12 @@ defaults write com.apple.finder QLEnableTextSelection -bool true
 
 action "Energy saving"
 
-# Sleep the display after 15 minutes
-sudo pmset -a displaysleep 15 || true
+# Sleep the display after 15 minutes on battery
+sudo pmset -b displaysleep 15 || true
+# Sleep the display after 45 minutes on charging
+sudo pmset -c displaysleep 45 || true
 # Set machine sleep to 20 minutes on battery
-sudo pmset -b sleep 20 || true
+sudo pmset -b sleep 30 || true
 # Set machine sleep to 120 minutes on charging
 sudo pmset -c sleep 120 || true
 
