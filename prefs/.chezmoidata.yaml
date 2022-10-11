@@ -13,7 +13,7 @@ homebrew:
     - bitwarden-cli # Secure and free password manager for all of your devices
     - chezmoi # Manage your dotfiles across multiple diverse machines, securely
     - ffmpeg # Play, record, convert, and stream audio and video
-    - mas # Mac App Store manager
+    # - mas # Mac App Store manager
     - yt-dlp # A youtube-dl fork with additional features and fixes
 
     # CLI tools/Enhancements
@@ -33,7 +33,7 @@ homebrew:
     - geos # Geometry Engine
     - libyaml # YAML Parser
     - openssl@1.1 # Cryptography and SSL/TLS Toolkit
-    - postgresql # Object-relational database system
+    - postgresql@14 # Object-relational database system
     - redis # Persistent key-value database, with built-in net interface
     # - sqlite # Command-line interface for SQLite
 
